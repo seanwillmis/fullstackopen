@@ -1,4 +1,31 @@
-import Course from "./components/Course";
+const Parts = ({ part }) => {
+  return (
+    <div>
+      {part.name}: {part.exercises} exercises
+    </div>
+  );
+};
+
+const Course = ({ course }) => {
+  return (
+    <div>
+      <h2>{course.name}</h2>
+      {course.parts.map((part) => (
+        <Parts part={part} />
+      ))}
+    </div>
+  );
+};
+
+const Courses = ({ courses }) => {
+  return (
+    <div>
+      {courses.map((course) => (
+        <Course course={course} />
+      ))}
+    </div>
+  );
+};
 
 const App = () => {
   const courses = [
@@ -49,9 +76,7 @@ const App = () => {
   return (
     <div>
       <h1>Web Development Curriculum</h1>
-      {courses.map((course) => (
-        <Course course={course} />
-      ))}
+      <Courses courses={courses} />
     </div>
   );
 };
