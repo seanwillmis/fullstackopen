@@ -9,7 +9,15 @@ const App = () => {
     const nameObject = {
       name: newName,
     };
-    setPersons(persons.concat(nameObject));
+
+    const alreadyExists = persons.some((perperson) => {
+      if (perperson.name === newName) {
+        return true;
+      }
+    });
+    alreadyExists
+      ? alert(`${newName} is already in the phonebook!`)
+      : setPersons(persons.concat(nameObject));
     setNewName("");
   };
 
