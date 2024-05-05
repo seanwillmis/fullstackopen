@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: "Arto Hellas", phone: "040-123456", id: 1 },
-    { name: "Ada Lovelace", phone: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", phone: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", phone: "39-23-6423122", id: 4 },
+    { name: "Arto Hellas", phone: "040-123456", id: uuidv4() },
+    { name: "Ada Lovelace", phone: "39-44-5323523", id: uuidv4() },
+    { name: "Dan Abramov", phone: "12-43-234345", id: uuidv4() },
+    { name: "Mary Poppendieck", phone: "39-23-6423122", id: uuidv4() },
   ]);
   const [filteredNames, setFilteredNames] = useState(persons);
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,6 +18,7 @@ const App = () => {
     const nameObject = {
       name: newName,
       phone: newPhone,
+      id: uuidv4(),
     };
 
     const alreadyExists = persons.some((perperson) => {
@@ -29,6 +31,7 @@ const App = () => {
       ? alert(`${newName} is already in the phonebook!`)
       : setPersons(persons.concat(nameObject));
     setNewName("");
+    setNewPhone("");
   };
 
   const handleName = (event) => {
@@ -41,13 +44,7 @@ const App = () => {
 
   const handleFilter = (event) => {
     const query = event.target.value;
-
     setSearchQuery(query);
-    const filtered = filteredNames.filter((person) => {
-      return person.name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
-    });
-    setFilteredNames(filtered);
-
     !query
       ? (setFilteredNames(persons), setSearchQuery(query))
       : console.log("");
@@ -74,11 +71,17 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {filteredNames.map((person, index) => (
-          <li key={index}>
-            {person.name} - {person.phone}
-          </li>
-        ))}
+        {persons
+          .filter((person) =>
+            person.name.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+          .map((person) => {
+            return (
+              <p key={person.id}>
+                {person.name} - {person.phone}
+              </p>
+            );
+          })}
       </ul>
     </div>
   );
