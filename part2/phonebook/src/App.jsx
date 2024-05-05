@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -8,7 +11,6 @@ const App = () => {
     { name: "Dan Abramov", phone: "12-43-234345", id: uuidv4() },
     { name: "Mary Poppendieck", phone: "39-23-6423122", id: uuidv4() },
   ]);
-  const [filteredNames, setFilteredNames] = useState(persons);
   const [searchQuery, setSearchQuery] = useState("");
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
@@ -45,44 +47,26 @@ const App = () => {
   const handleFilter = (event) => {
     const query = event.target.value;
     setSearchQuery(query);
-    !query
-      ? (setFilteredNames(persons), setSearchQuery(query))
-      : console.log("");
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        Filter shown with <input value={searchQuery} onChange={handleFilter} />
-      </div>
-      <form>
-        <div>
-          Name: <input value={newName} onChange={handleName} />
-        </div>
-        <div>
-          Phone: <input value={newPhone} onChange={handlePhone} />
-        </div>
-        <div>
-          <button type="submit" onClick={handleAdd}>
-            Add
-          </button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <ul>
-        {persons
-          .filter((person) =>
-            person.name.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-          .map((person) => {
-            return (
-              <p key={person.id}>
-                {person.name} - {person.phone}
-              </p>
-            );
-          })}
-      </ul>
+
+      {/* FILTER */}
+      <Filter searchQuery={searchQuery} handleFilter={handleFilter} />
+
+      {/* PERSON FORM  */}
+      <PersonForm
+        newName={newName}
+        newPhone={newPhone}
+        handleName={handleName}
+        handlePhone={handlePhone}
+        handleAdd={handleAdd}
+      />
+
+      {/* PERSONS */}
+      <Persons persons={persons} searchQuery={searchQuery} />
     </div>
   );
 };

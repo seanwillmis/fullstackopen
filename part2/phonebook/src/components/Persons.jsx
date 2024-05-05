@@ -1,13 +1,19 @@
-export default function Persons({ filteredNames }) {
+export default function Persons({ persons, searchQuery }) {
   return (
     <div>
       <h2>Numbers</h2>
       <ul>
-        {filteredNames.map((person, index) => (
-          <li key={index}>
-            {person.name} - {person.phone}
-          </li>
-        ))}
+        {persons
+          .filter((person) =>
+            person.name.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+          .map((person) => {
+            return (
+              <p key={person.id}>
+                {person.name} - {person.phone}
+              </p>
+            );
+          })}
       </ul>
     </div>
   );
