@@ -2,8 +2,13 @@ import { useState } from "react";
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: "Arto Hellas", phone: "123-456-7890" },
+    { name: "Arto Hellas", phone: "040-123456", id: 1 },
+    { name: "Ada Lovelace", phone: "39-44-5323523", id: 2 },
+    { name: "Dan Abramov", phone: "12-43-234345", id: 3 },
+    { name: "Mary Poppendieck", phone: "39-23-6423122", id: 4 },
   ]);
+  const [filteredNames, setFilteredNames] = useState(persons);
+  const [searchQuery, setSearchQuery] = useState("");
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
 
@@ -19,6 +24,7 @@ const App = () => {
         return true;
       }
     });
+
     alreadyExists
       ? alert(`${newName} is already in the phonebook!`)
       : setPersons(persons.concat(nameObject));
@@ -26,18 +32,33 @@ const App = () => {
   };
 
   const handleName = (event) => {
-    // console.log(event.target.value);
     setNewName(event.target.value);
   };
 
   const handlePhone = (event) => {
-    // console.log(event.target.value);
     setNewPhone(event.target.value);
+  };
+
+  const handleFilter = (event) => {
+    const query = event.target.value;
+
+    setSearchQuery(query);
+    const filtered = filteredNames.filter((person) => {
+      return person.name.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+    });
+    setFilteredNames(filtered);
+
+    !query
+      ? (setFilteredNames(persons), setSearchQuery(query))
+      : console.log("");
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        Filter shown with <input value={searchQuery} onChange={handleFilter} />
+      </div>
       <form>
         <div>
           Name: <input value={newName} onChange={handleName} />
@@ -45,7 +66,6 @@ const App = () => {
         <div>
           Phone: <input value={newPhone} onChange={handlePhone} />
         </div>
-        {/* <div>debug: {newName}</div> */}
         <div>
           <button type="submit" onClick={handleAdd}>
             Add
@@ -54,8 +74,8 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map((person) => (
-          <li key={person.name}>
+        {filteredNames.map((person, index) => (
+          <li key={index}>
             {person.name} - {person.phone}
           </li>
         ))}
