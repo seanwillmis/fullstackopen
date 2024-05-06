@@ -1,8 +1,8 @@
 export default function PersonForm({
   newName,
-  newPhone,
+  newNumber,
   handleName,
-  handlePhone,
+  handleNumber,
   handleAdd,
 }) {
   return (
@@ -12,7 +12,7 @@ export default function PersonForm({
           Name: <input value={newName} onChange={handleName} />
         </div>
         <div>
-          Phone: <input value={newPhone} onChange={handlePhone} />
+          Number: <input value={newNumber} onChange={handleNumber} />
         </div>
         <div>
           <button type="submit" onClick={handleAdd}>

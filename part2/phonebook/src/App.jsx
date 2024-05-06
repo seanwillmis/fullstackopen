@@ -1,25 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", phone: "040-123456", id: uuidv4() },
-    { name: "Ada Lovelace", phone: "39-44-5323523", id: uuidv4() },
-    { name: "Dan Abramov", phone: "12-43-234345", id: uuidv4() },
-    { name: "Mary Poppendieck", phone: "39-23-6423122", id: uuidv4() },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [newName, setNewName] = useState("");
-  const [newPhone, setNewPhone] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+
+  /** Get data from db.json file */
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      console.log("promise fulfilled");
+      setPersons(response.data);
+    });
+  }, []);
 
   const handleAdd = (event) => {
     event.preventDefault();
     const nameObject = {
       name: newName,
-      phone: newPhone,
+      number: newNumber,
       id: uuidv4(),
     };
 
@@ -31,17 +35,22 @@ const App = () => {
 
     alreadyExists
       ? alert(`${newName} is already in the phonebook!`)
-      : setPersons(persons.concat(nameObject));
+      : axios
+          .post("http://localhost:3001/persons", nameObject)
+          .then((response) => {
+            console.log(response.status, response.data.token);
+          }),
+      window.location.reload();
     setNewName("");
-    setNewPhone("");
+    setNewNumber("");
   };
 
   const handleName = (event) => {
     setNewName(event.target.value);
   };
 
-  const handlePhone = (event) => {
-    setNewPhone(event.target.value);
+  const handleNumber = (event) => {
+    setNewNumber(event.target.value);
   };
 
   const handleFilter = (event) => {
@@ -59,9 +68,9 @@ const App = () => {
       {/* PERSON FORM  */}
       <PersonForm
         newName={newName}
-        newPhone={newPhone}
+        newNumber={newNumber}
         handleName={handleName}
-        handlePhone={handlePhone}
+        handleNumber={handleNumber}
         handleAdd={handleAdd}
       />
 

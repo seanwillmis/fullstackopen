@@ -10,7 +10,7 @@ export default function Persons({ persons, searchQuery }) {
           .map((person) => {
             return (
               <p key={person.id}>
-                {person.name} - {person.phone}
+                {person.name} - {person.number}
               </p>
             );
           })}
