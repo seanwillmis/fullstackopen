@@ -19,6 +19,7 @@ const App = () => {
     });
   }, []);
 
+  // this already handled adding phone numbers
   const handleAdd = (event) => {
     event.preventDefault();
     const nameObject = {
