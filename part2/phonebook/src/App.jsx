@@ -44,6 +44,11 @@ const App = () => {
     setNewNumber("");
   };
 
+  const handleDelete = (id) => {
+    personService.deletePerson(id);
+    setPersons(persons.filter((person) => person.id !== id));
+  };
+
   const handleName = (event) => {
     setNewName(event.target.value);
   };
@@ -74,7 +79,11 @@ const App = () => {
       />
 
       {/* PERSONS */}
-      <Persons persons={persons} searchQuery={searchQuery} />
+      <Persons
+        persons={persons}
+        searchQuery={searchQuery}
+        handleDelete={handleDelete}
+      />
     </div>
   );
 };

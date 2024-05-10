@@ -1,4 +1,4 @@
-export default function Persons({ persons, searchQuery }) {
+export default function Persons({ persons, searchQuery, handleDelete }) {
   return (
     <div>
       <h2>Numbers</h2>
@@ -10,7 +10,8 @@ export default function Persons({ persons, searchQuery }) {
           .map((person) => {
             return (
               <p key={person.id}>
-                {person.name} - {person.number}
+                {person.name} - {person.number}{" "}
+                <button onClick={() => handleDelete(person.id)}>delete</button>
               </p>
             );
           })}
