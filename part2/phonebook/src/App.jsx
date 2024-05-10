@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import personService from "./services/persons.js";
 import { v4 as uuidv4 } from "uuid";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
@@ -13,9 +13,9 @@ const App = () => {
 
   /** Get data from db.json file */
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
+    personService.getAll().then((initialPersons) => {
       console.log("promise fulfilled");
-      setPersons(response.data);
+      setPersons(initialPersons);
     });
   }, []);
 
@@ -36,11 +36,9 @@ const App = () => {
 
     alreadyExists
       ? alert(`${newName} is already in the phonebook!`)
-      : axios
-          .post("http://localhost:3001/persons", nameObject)
-          .then((response) => {
-            console.log(response.status, response.data.token);
-          }),
+      : personService.create(nameObject).then((response) => {
+          console.log(response.status, response.data.token);
+        }),
       window.location.reload();
     setNewName("");
     setNewNumber("");
