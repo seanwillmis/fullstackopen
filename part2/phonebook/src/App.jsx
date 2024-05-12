@@ -4,12 +4,14 @@ import { v4 as uuidv4 } from "uuid";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   /** Get data from db.json file */
   useEffect(() => {
@@ -19,7 +21,6 @@ const App = () => {
     });
   }, []);
 
-  // this already handled adding phone numbers
   const handleAdd = (event) => {
     event.preventDefault();
     const nameObject = {
@@ -39,6 +40,7 @@ const App = () => {
       : personService.create(nameObject).then((response) => {
           console.log(response.status, response.data.token);
         }),
+      setErrorMessage(`Added ${newName}`),
       window.location.reload();
     setNewName("");
     setNewNumber("");
@@ -65,6 +67,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={errorMessage} />
 
       {/* FILTER */}
       <Filter searchQuery={searchQuery} handleFilter={handleFilter} />
