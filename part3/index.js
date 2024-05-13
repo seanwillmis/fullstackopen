@@ -26,14 +26,17 @@ let persons = [
   },
 ];
 
+// get landing page
 app.get("/", (request, response) => {
   response.send("<h1>Hello World!</h1>");
 });
 
+// get all persons
 app.get("/api/persons", (request, response) => {
   response.json(persons);
 });
 
+// get info
 app.get("/info", (request, response) => {
   response.send(
     `<p>Phonebook has info for ${persons.length} <br/> ${today}</p>`
@@ -50,6 +53,14 @@ app.get("/api/persons/:id", (request, response) => {
   } else {
     response.status(404).end();
   }
+});
+
+// delete single resource
+app.delete("/api/persons/:id", (request, response) => {
+  const id = Number(request.params.id);
+  persons = persons.filter((person) => person.id !== id);
+
+  response.status(204).end();
 });
 
 const PORT = 3001;
