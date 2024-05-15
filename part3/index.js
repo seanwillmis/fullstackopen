@@ -1,7 +1,7 @@
 const express = require("express");
-const app = express();
 
-const today = new Date();
+const app = express();
+app.use(express.json());
 
 let persons = [
   {
@@ -25,6 +25,13 @@ let persons = [
     number: "39-23-6423122",
   },
 ];
+
+const today = new Date();
+
+const generateId = () => {
+  const maxId = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
+  return maxId + 1;
+};
 
 // get landing page
 app.get("/", (request, response) => {
@@ -53,6 +60,28 @@ app.get("/api/persons/:id", (request, response) => {
   } else {
     response.status(404).end();
   }
+});
+
+// post single resource
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
+  //   const generateId = Math.ceil(Math.random() * 10000);
+
+  // content body cannot be empty, or else respond with a 400
+  if (!body.name || !body.number) {
+    return response.status(400).json({
+      error: "Name or Numner is missing",
+    });
+  }
+
+  const person = {
+    id: generateId(),
+    name: body.name,
+    number: body.number,
+  };
+
+  persons = persons.concat(person);
+  response.json(person);
 });
 
 // delete single resource
