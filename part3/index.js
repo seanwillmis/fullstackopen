@@ -65,12 +65,22 @@ app.get("/api/persons/:id", (request, response) => {
 // post single resource
 app.post("/api/persons", (request, response) => {
   const body = request.body;
-  //   const generateId = Math.ceil(Math.random() * 10000);
 
-  // content body cannot be empty, or else respond with a 400
+  const alreadyExists = persons.some((perperson) => {
+    if (perperson.name === body.name) {
+      return true;
+    }
+  });
+
+  // content body cannot be empty or duplicated name,
+  // or else respond with a 400
   if (!body.name || !body.number) {
     return response.status(400).json({
       error: "Name or Numner is missing",
+    });
+  } else if (alreadyExists) {
+    return response.status(400).json({
+      error: "Name already exists",
     });
   }
 
